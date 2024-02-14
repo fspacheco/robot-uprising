@@ -34,6 +34,12 @@ class RobotController:
         self.port_entry = tk.Entry(self.master, textvariable=self.port_value)
         self.port_entry.grid(row=1, column=1)
 
+        # Default values for real robot and simulation
+        real_label = tk.Button(self.master, text="Real robot", command=self.set_ip_real)
+        real_label.grid(row=0, column=2)
+        simulator_label = tk.Button(self.master, text="Simulator", command=self.set_ip_simulator)
+        simulator_label.grid(row=1, column=2)
+
         # Left motor slider
         left_motor_label = tk.Label(self.master, text="Left Motor")
         left_motor_label.grid(row=2, column=0)
@@ -53,6 +59,14 @@ class RobotController:
         # Stop button
         stop_button = tk.Button(self.master, text="STOP", command=self.stop_robot)
         stop_button.grid(row=5, column=0, columnspan=2)
+
+    def set_ip_real(self):
+        self.ip_value.set("192.168.81.205")
+        self.port_value.set("3000")
+
+    def set_ip_simulator(self):
+        self.ip_value.set("127.0.0.1")
+        self.port_value.set("3001")
 
     def send_command(self):
         left_motor = self.left_motor_value.get()
