@@ -6,6 +6,8 @@ Fernando
 """
 import tkinter as tk
 import socket
+import time
+from threading import Thread
 
 class RobotController:
     def __init__(self, master):
@@ -60,21 +62,29 @@ class RobotController:
         stop_button = tk.Button(self.master, text="STOP", command=self.stop_robot)
         stop_button.grid(row=5, column=0, columnspan=2)
 
+        # Square movement button
+        square_button = tk.Button(self.master, text="Move Square", command=self.move_square_thread)
+        square_button.grid(row=6, column=0, columnspan=2)
+
+        # Circle movement button
+        circle_button = tk.Button(self.master, text="Move Circle", command=self.move_circle_thread)
+        circle_button.grid(row=7, column=0, columnspan=2)        
+
         # Forward button
         forward_button = tk.Button(self.master, text="Forward", command=self.move_forward)
-        forward_button.grid(row=6, column=1)
+        forward_button.grid(row=8, column=1)
 
         # Backward button
         backward_button = tk.Button(self.master, text="Backward", command=self.move_backward)
-        backward_button.grid(row=8, column=1)
+        backward_button.grid(row=10, column=1)
 
         # Left button
         left_button = tk.Button(self.master, text="Left", command=self.move_left)
-        left_button.grid(row=7, column=0)
+        left_button.grid(row=9, column=0)
 
         # Right button
         right_button = tk.Button(self.master, text="Right", command=self.move_right)
-        right_button.grid(row=7, column=2)
+        right_button.grid(row=9, column=2)
 
     def set_ip_real(self):
         self.ip_value.set("192.168.81.205")
@@ -118,6 +128,30 @@ class RobotController:
         udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         udp_socket.sendto(command.encode(), (self.ip_value.get(), int(self.port_value.get())))
         udp_socket.close()
+
+    def move_square_thread(self):
+        # Create a new thread to move the robot in a square pattern
+        Thread(target=self.move_square).start()
+
+    def move_square(self):
+        # Function to move the robot in a square pattern
+        step_time = 1.5
+
+        for i in range(4): # 4 sides
+            self.move_forward()
+            time.sleep(step_time)
+            self.move_right()
+            time.sleep(0.3*step_time)
+        self.stop_robot()
+
+    def move_circle_thread(self):
+        # Create a new thread to move the robot in a circle pattern
+        Thread(target=self.move_circle).start()
+
+    def move_circle(self):
+        # Function to move the robot in a circle pattern
+        speed = 100  # Speed of the motors
+        self.send_udp_packet(f"{int(speed)};{int(0.5*speed)}")        
 
 def main():
     root = tk.Tk()
