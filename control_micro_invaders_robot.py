@@ -60,6 +60,22 @@ class RobotController:
         stop_button = tk.Button(self.master, text="STOP", command=self.stop_robot)
         stop_button.grid(row=5, column=0, columnspan=2)
 
+        # Forward button
+        forward_button = tk.Button(self.master, text="Forward", command=self.move_forward)
+        forward_button.grid(row=6, column=1)
+
+        # Backward button
+        backward_button = tk.Button(self.master, text="Backward", command=self.move_backward)
+        backward_button.grid(row=8, column=1)
+
+        # Left button
+        left_button = tk.Button(self.master, text="Left", command=self.move_left)
+        left_button.grid(row=7, column=0)
+
+        # Right button
+        right_button = tk.Button(self.master, text="Right", command=self.move_right)
+        right_button.grid(row=7, column=2)
+
     def set_ip_real(self):
         self.ip_value.set("192.168.81.205")
         self.port_value.set("3000")
@@ -67,6 +83,26 @@ class RobotController:
     def set_ip_simulator(self):
         self.ip_value.set("127.0.0.1")
         self.port_value.set("3001")
+
+    def move_forward(self):
+        self.right_motor_value.set(100)
+        self.left_motor_value.set(100)
+        self.send_command()
+
+    def move_backward(self):
+        self.right_motor_value.set(-100)
+        self.left_motor_value.set(-100)
+        self.send_command()
+
+    def move_left(self):
+        self.left_motor_value.set(-25)
+        self.right_motor_value.set(+50)
+        self.send_command()
+
+    def move_right(self):
+        self.left_motor_value.set(+50)
+        self.right_motor_value.set(-25)
+        self.send_command()
 
     def send_command(self):
         left_motor = self.left_motor_value.get()
